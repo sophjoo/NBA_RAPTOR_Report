@@ -1,0 +1,99 @@
+---
+title: "36-315 Poster"
+author: 'Group: Brian Choi, Sophia Lee, Jonathan Fung'
+date: "Due May 4, 2020"
+output:
+  html_document:
+    code_folding: show
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+---
+
+
+***
+***
+
+# Introduction Paragraph
+
+The dataset of modern_RAPTOR_by_team contains RAPTOR data for every player "broken out"
+by team, season, and season_type since 2014. The dataset contains 23 variables (columns) and 570 rows (players), 571 total rows including the first row of variable names. Each observation corresponds to the NBA players "broken out" since 2014.
+
+The types of variables in the data include:  
+1. Player Name  
+2. Player ID  
+3. Season  
+4. Season Type  
+5. Team  
+6. Possessions  
+7. Minutes Played  
+8-10. RAPTOR Box Offense/Defense/Total  
+11-13. RAPTOR OnOff Offense/Defense/Total  
+14-16. RAPTOR Offense/Defense/Total  
+17-19. WAR Total/RegularSeason/Playoffs  
+20-22. PREDATOR Offense/Defense/Total  
+23. Pace Impact  
+
+The RAPTOR variables correspond to Points above average per 100 possessions added by player. This data is categorized by on offense, defense, or in total. This data is based on by box score estimate, plus-minus data, or using both box and on-off components.
+
+The WAR variables correspond to Wins Above Replacement, categorized by regular season games, or playoff games, or both.
+
+The PREDATOR variables correspond to Predictive points aboce average per 100 possessions, categorized by on offesnse, defense, or both offense and defense.
+
+The last variable (pace_impact) explains player impact on team possessions per 48 minutes.
+
+NBA RAPTOR Dataset:  
+https://fivethirtyeight.com/features/introducing-raptor-our-new-metric-for-the-modern-nba
+
+https://raw.githubusercontent.com/fivethirtyeight/data/master/nba-raptor/modern_RAPTOR_by_team.csv
+
+
+
+# Main Research Questions
+
++ **Question**: What is the relationship between RAPTOR metric, WAR metric, and the PREDATOR metric by the season type? In other words, do players perform differently in regular season games vs. playoff games?
+
++ **Question**: Which teams, based on the player stats and certain variables, performed the best given the time frame? Which performed the best in a specific season?
+
++ **Question**: Which metric out of RAPTOR, WAR, and PREDATOR is the best indicator of playoff success? Do better stats measure up to real life success?
+
+# Graphs
+
+
+```{r, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(ggplot2)
+nba_raptor <- read_csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/nba-raptor/modern_RAPTOR_by_team.csv")
+
+nba_raptor_west <- subset(nba_raptor, team == c("LAC", "GSW", "HOU", "SAS", "POR", "OKC"))
+
+nba_raptor_east <- subset(nba_raptor, team == c("MIL", "TOR", "BOS", "IND", "WSH", "CLE"))
+
+
+nba.plot1 <- ggplot(nba_raptor_west, aes(x = season_type, y = raptor_total, color = team)) + 
+  geom_boxplot() +
+  labs(x = "Season Type", y = "Total Raptor Values", color = "Western Conference Teams", 
+                                      title = "Raptor Values for Top Western Conference Teams by Season Type")
+
+nba.plot2 <- ggplot(nba_raptor_east, aes(x = season_type, y = raptor_total, color = team)) + 
+  geom_boxplot() +
+  labs(x = "Season Type", y = "Total Raptor Values", color = "Eastern Conference Teams", 
+                                      title = "Raptor Values for Top Eastern Conference Team by Season Type")
+
+nba.plot1
+nba.plot2
+
+```
+
+We wanted to look at the performance of NBA players in regular and playoff games, and compare how variables like RAPTOR_total could change depending on game type. We subsetted the nba raptor dataset into two to only include the top six Western and Eastern teams, based on the number of playoff appearances since 2014. Thus, the six teams for each conference that made it to the postseason will be compared, both for specificity and sample size reasons. This makes it so that all 30 teams aren't mashed into one graph, and also to ensure that the Playoff stats are represented by as much data as possible.
+
+We can see the relationship between raptor values for each team, and how the season type affects raptor values. The Playoffs show a much bigger spread in the boxplot than Regular season for Western teams, as well as differences for the Eastern teams. and 
+though this could be a result of more regular season games to average out closer to one another, something interesting to note is certain teams having lower raptor values on average, such as Portland and OKC. Other teams seem to have higher raptor values, like Milwaukee, Cleveland, or Boston. 
+
+In all, the spread is much larger in Playoffs than during the season for most teams, but a lot of teams show different Raptor values based on season type. This could explain certain teams underachieving in the Playoffs despite playing well during the regular season, like Portland and OKC, while other teams like the San Antonio Spurs or Cleveland stepped it up during the Playoffs and displayed better RAPTOR values.
+
+# Conclusion Paragraph
+
+
+
